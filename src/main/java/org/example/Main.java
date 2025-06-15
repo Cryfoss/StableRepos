@@ -4,63 +4,49 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        //checkInt(); // 1. Напиши метод, проверяющий, является ли число чётным.
-        //nameCheck(); // 2. Напиши метод, проверяющий, что введённое имя не больше 20 символов.
-            /* int[] res = new int[20]; // 3. Задаем массив
-            reverse(res); // 3. Принимает массив и возвращает новый массив в обратном порядке. */
-        //capitalLetter("JavaRoad"); // 4. Напиши метод, который проверяет, начинается ли строка с большой буквы.
-        //checkedMail() ;// 5. Напиши метод, который принимает email и проверяет, есть ли в нём @ и точка после него
+        //isIntEvenNumber(); // 1. Напиши метод, проверяющий, является ли число чётным.
+        //isLetterNoMore20Symvols(); // 2. Напиши метод, проверяющий, что введённое имя не больше 20 символов.
+        /* int[] res = new int[20];
+        for (int i = 0; i < res.length; i++) {
+            res[i] = i;
+        }// 3. Задаем массив
+        reverse(res); // 3. Принимает массив и возвращает новый массив в обратном порядке. */
+        //isFirstSymvolsCapital("JavaRoad"); // 4. Напиши метод, который проверяет, начинается ли строка с большой буквы.
+        //isMailCorrect() ;// 5. Напиши метод, который принимает email и проверяет, есть ли в нём @ и точка после него
     }
     // 1. Метод позволяющий определить, четное ли число поступило на входе
-    public static void checkInt(){
-        Scanner console = new Scanner(System.in);
-        int a = console.nextInt();
-        String info = (a % 2 == 0) ? "число четное" : "число не четное";
+    public static boolean isIntEvenNumber(int num){
+        boolean info = (num % 2 == 0) ? true : false;
         System.out.println(info);
+        return info;
+
     }
     // 2. Метод, ограничивающий ввод, свыше 20 символов
-    public static void nameCheck(){
-        Scanner console = new Scanner(System.in);
-        String name = console.nextLine();
-        if (name.length() > 20){
-            System.out.println("имя слишком длинное");
-        }
-        else {
-            System.out.println(name);
-        }
+    public static boolean isLetterNoMore20Symvols(String letter){
+        boolean letChecked = letter.length() > 20 ? false : true;
+        System.out.println(letChecked);
+        return letChecked;
+
     }
     // 3. Метод, принимающий массив и выводящий его, в обратном порядке
     public static void reverse(int[]array){
-        for (int i = array.length - 1; i > 0; i--) {
-            array[i] = i;
+        for (int i = array.length - 1; i >= 0; i--) {
             System.out.println(array[i]);
         }
     }
     // 4. Метод, проверяющий, начинается ли слово с большой буквы (с русской раскладкой почему-то не робит)
-    public static void capitalLetter(String letter){
-        char cFirstIndex = letter.charAt(0);
-        String firstIndex = String.valueOf(cFirstIndex);
-        String lowIndex = firstIndex.toLowerCase();
-        Boolean checkIndex = firstIndex.equals(lowIndex);
-        if (checkIndex == true){
-            System.out.println("Строка начинается с маленькой буквы");
-        }
-        else {
-            System.out.println("Строка начинается с большой буквы");
-        }
+    public static boolean isFirstSymvolsCapital(String letter){
+        boolean asd = Character.isUpperCase(letter.charAt(0));
+        System.out.println(asd);
+        return asd;
     }
     //5. Метод, который принимает email и проверяет, есть ли в нём @ и точка после него
-    public static void checkedMail(){
-        Scanner scr = new Scanner(System.in);
-        String mail = scr.nextLine();
-        int sobachka = mail.indexOf("@") + 1;
-        int tochka = mail.indexOf(".") + 1;
-        if((tochka > sobachka) && (sobachka != 0)){
-            System.out.println("Email отправлен");
-        }
-        else {
-            System.out.println("ВСЕ СЛОМАЛОСЬ!");
-        }
+    public static boolean isMailCorrect(String adress){
+        int at = adress.indexOf("@") + 1;
+        int dot = adress.indexOf(".") + 1;
+        boolean check = ((dot > at) && (at != 0))? true : false;
+        System.out.println(check);
+        return check;
 
     }
 
