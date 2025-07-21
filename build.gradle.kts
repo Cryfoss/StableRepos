@@ -17,3 +17,7 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
+dependencies {
+    implementation("org.projectlombok:lombok:1.18.32") // актуальная версия на июнь 2025
+    annotationProcessor("org.projectlombok:lombok:1.18.32")
+}
