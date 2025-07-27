@@ -28,8 +28,8 @@ public class Main {
         //isFirstSymvolsCapital("JavaRoad"); // 4. Напиши метод, который проверяет, начинается ли строка с большой буквы.
         //isMailCorrect() ;// 5. Напиши метод, который принимает email и проверяет, есть ли в нём @ и точка после него
         //(1) Напиши метод, который принимает строку из ровно 6 цифр (например, "385916") и возвращает true, если это счастливый билет. Счастливый билет тот, чья сумма первых трёх цифр равна сумме последних трёх.
-        System.out.println(isLuckyTicket("123321")); // True
-        System.out.println(isLuckyTicket("111222")); // False
+        //System.out.println(isLuckyTicket("123321")); // True
+        //System.out.println(isLuckyTicket("111222")); // False
         //(2) Реализуй метод, который проверяет, являются ли две строки анаграммами (т.е. содержат одинаковые буквы, но в разном порядке). игнорируй регистр и пробелы.
         //System.out.println(areAnagrams("salt","T als"));
         //System.out.println(areAnagrams("For","rof"));
