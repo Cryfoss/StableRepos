@@ -2,6 +2,7 @@ package org.example;
 
 import lombok.Data;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -15,8 +16,8 @@ import static java.lang.Integer.parseInt;
 import static org.example.Main.TicketChecker.isLuckyTicket;
 
 public class Main {
-    public static void main(String[] args) {
-        //isIntEvenNumber(); // 1. Напиши метод, проверяющий, является ли число чётным.
+    public static void main(String[] args) throws Exception {
+        isNumberEven(6); // 1. Напиши метод, проверяющий, является ли число чётным.
         //isLetterNoMore20Symvols(); // 2. Напиши метод, проверяющий, что введённое имя не больше 20 символов.
         /*int[] res = new int[20];
         for (int i = 0; i < res.length; i++)
@@ -27,8 +28,8 @@ public class Main {
         //isFirstSymvolsCapital("JavaRoad"); // 4. Напиши метод, который проверяет, начинается ли строка с большой буквы.
         //isMailCorrect() ;// 5. Напиши метод, который принимает email и проверяет, есть ли в нём @ и точка после него
         //(1) Напиши метод, который принимает строку из ровно 6 цифр (например, "385916") и возвращает true, если это счастливый билет. Счастливый билет тот, чья сумма первых трёх цифр равна сумме последних трёх.
-        //System.out.println(isLuckyTicket("123321")); // True
-        //System.out.println(isLuckyTicket("111222")); // False
+        System.out.println(isLuckyTicket("123321")); // True
+        System.out.println(isLuckyTicket("111222")); // False
         //(2) Реализуй метод, который проверяет, являются ли две строки анаграммами (т.е. содержат одинаковые буквы, но в разном порядке). игнорируй регистр и пробелы.
         //System.out.println(areAnagrams("salt","T als"));
         //System.out.println(areAnagrams("For","rof"));
@@ -53,14 +54,12 @@ public class Main {
 
     }
     // 1. Метод позволяющий определить, четное ли число поступило на входе
-    public static boolean isIntEvenNumber(int num){
-        boolean info = (num % 2 == 0) ? true : false;
-        System.out.println(info);
-        return info;
+    public static Boolean isNumberEven(Integer num){
+        return num % 2 == 0;
     }
     // 2. Метод, ограничивающий ввод, свыше 20 символов
-    public static boolean isLetterNoMore20Symvols(String letter){
-        boolean letChecked = letter.length() > 20 ? false : true;
+    public static Boolean isStringLessThan20Symbols(String letter){
+        Boolean letChecked = letter.length() > 20 ? false : true;
         System.out.println(letChecked);
         return letChecked;
     }
@@ -71,31 +70,32 @@ public class Main {
         }
     }
     // 4. Метод, проверяющий, начинается ли слово с большой буквы (с русской раскладкой почему-то не робит)
-    public static boolean isFirstSymvolsCapital(String letter){
-        boolean asd = Character.isUpperCase(letter.charAt(0));
+    public static Boolean isFirstSymvolsCapital(String letter){
+        Boolean asd = Character.isUpperCase(letter.charAt(0));
         System.out.println(asd);
         return asd;
     }
     //5. Метод, который принимает email и проверяет, есть ли в нём @ и точка после него
-    public static boolean isMailCorrect(String adress){
+    public static Boolean isMailCorrect(String adress){
         int at = adress.indexOf("@") + 1;
         int dot = adress.indexOf(".") + 1;
-        boolean check = ((dot > at) && (at != 0))? true : false;
+        Boolean check = ((dot > at) && (at != 0))? true : false;
         System.out.println(check);
         return check;
     }
     //Практика Java 1.Lucky Ticket
     public class TicketChecker{
-        public static boolean isLuckyTicket(String ticket) {
+        public static Boolean isLuckyTicket(String ticket) throws Exception {
             int length = ticket.length();
             try {
                 Integer.parseInt(ticket);
             }
             catch (NumberFormatException e){
-                System.err.println("Введите число!");
+
+                throw new Exception("Введите число!");
             }
             if (length != 6) {
-                System.err.println("Введите 6 чисел");
+                throw new Exception("Введите 6 чисел");
             }
             int sum = 0;
             int sum2 = 0;
@@ -105,18 +105,18 @@ public class Main {
             for (int i = 3; i < 6; i++) {
                 sum2 += Character.getNumericValue(ticket.charAt(i));
             }
-            return sum == sum2 ? true : false;
+            return sum == sum2;
         }
 
     }
     //Практика Java 2.Проверка анаграмм
-    public static boolean areAnagrams(String word1,String word2){
+    public static Boolean areAnagrams(String word1,String word2){
         //Удаляем пробелы
-        String wordWithoutWhitespace1 = word1.replace(" ", "");
-        String wordWithoutWhitespace2 = word2.replace(" ", "");
+        String firstWordWithoutSpaces = word1.replace(" ", "");
+        String secondWordWithoutSpaces = word2.replace(" ", "");
         // Переводим в нижний регистр, дли его игнорирования
-        String wordCorrectCase1 = wordWithoutWhitespace1.toLowerCase();
-        String wordCorrectCase2 = wordWithoutWhitespace2.toLowerCase();
+        String wordCorrectCase1 = firstWordWithoutSpaces.toLowerCase();
+        String wordCorrectCase2 = secondWordWithoutSpaces.toLowerCase();
         // Создаем массив символов с наших строк и сортируем их для дальнейшего сравнения
         char [] charArrayWord1 = wordCorrectCase1.toCharArray();
         Arrays.sort(charArrayWord1);
