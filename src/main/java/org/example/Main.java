@@ -12,12 +12,14 @@ import java.util.stream.Stream;
 import java.util.Collection;
 import java.util.ArrayList;
 
+
 import static java.lang.Integer.parseInt;
 import static org.example.Main.TicketChecker.isLuckyTicket;
 
 public class Main {
+
     public static void main(String[] args) throws Exception {
-        isNumberEven(6); // 1. Напиши метод, проверяющий, является ли число чётным.
+        //isNumberEven(6); // 1. Напиши метод, проверяющий, является ли число чётным.
         //isLetterNoMore20Symvols(); // 2. Напиши метод, проверяющий, что введённое имя не больше 20 символов.
         /*int[] res = new int[20];
         for (int i = 0; i < res.length; i++)
