@@ -22,12 +22,14 @@ class Specifications {
                 .expectStatusCode(200)
                 .build();
     }
+
     public static ResponseSpecification responseSpec400() {
         return new ResponseSpecBuilder()
                 .expectStatusCode(400)
                 .build();
     }
-    public static void installSpec(RequestSpecification request, ResponseSpecification response){
+
+    public static void installSpec(RequestSpecification request, ResponseSpecification response) {
         RestAssured.requestSpecification = request;
         RestAssured.responseSpecification = response;
     }

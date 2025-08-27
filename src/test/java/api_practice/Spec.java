@@ -10,20 +10,22 @@ import io.restassured.specification.ResponseSpecification;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 
 class Spec {
-    static RequestSpecification RequestSpec(String url){
+    static RequestSpecification requestSpec(String url) {
         return new RequestSpecBuilder()
                 .setBaseUri(url)
                 .setContentType(ContentType.JSON)
                 .build();
 
     }
-    static ResponseSpecification Response200(){
+
+    static ResponseSpecification response200() {
         return new ResponseSpecBuilder()
                 .expectStatusCode(200)
                 .build();
     }
-static void instSpec(RequestSpecification request,ResponseSpecification response){
-    RestAssured.requestSpecification = request;
-    RestAssured.responseSpecification = response;
-}
+
+    static void instSpec(RequestSpecification request, ResponseSpecification response) {
+        RestAssured.requestSpecification = request;
+        RestAssured.responseSpecification = response;
+    }
 }
