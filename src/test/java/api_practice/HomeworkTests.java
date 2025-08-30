@@ -10,8 +10,7 @@ import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class HomeworkTests {
-    private final static String URL = "https://jsonplaceholder.typicode.com";
+class HomeworkTests extends BaseHomeworkTest {
 
     @Test
         //Простой GET запрос на 100 постов
@@ -47,7 +46,7 @@ class HomeworkTests {
                 .containsOnly(1);
 
         //Проверь, что в ответе минимум 5 постов
-        assertThat(parametrs.size()>=5).isTrue();
+        assertThat(parametrs.size()).isGreaterThan(5);
     }
 }
 

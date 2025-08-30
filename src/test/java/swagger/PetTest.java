@@ -5,41 +5,38 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import io.qameta.allure.Attachment;
 import io.qameta.allure.Description;
-import io.qameta.allure.Step;
 import io.restassured.http.ContentType;
+import lombok.Builder;
 import org.junit.jupiter.api.*;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import static io.restassured.RestAssured.basePath;
 import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.anyOf;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.core.IsEqual.equalTo;
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@DisplayName("Pet Testing")
-public class PetTest {
-    private final static String URL = "https://petstore.swagger.io/v2/pet/";
-    private final static Gson gson = new Gson();
+import static org.assertj.core.api.Assertions.*;
 
-    @Order(1)
-    @DisplayName("Create Pet")
-    @Description("Проверяет отправку запроса на создание питомца по всем полям, проверяем поля name и id")
+public class PetTest extends BaseSwaggerTest {
+    @DisplayName("Отдельная ручка на создание пета")
     @Test
-    public void createPet(){
-        SpecificationSwag.initialSpec(SpecificationSwag.requestSpecification(URL));
-        Category cow = new Category(10000, "Cow");
-        Tag tagHouseAnimal = new Tag(101,"houseAnimal");
-        Pet pet = new Pet();
-        pet.setId(10001);
-        pet.setCategory(cow);
-        pet.setName("murka");
-        pet.setPhotoUrls(List.of("String"));
-        pet.setTags(List.of(tagHouseAnimal));
-        pet.setStatus("available");
+    public void createPet() {
+        SpecificationSwag.initialSpec(SpecificationSwag.requestSpecification(URL,baseUriPet));
+        //Создаем объект питомца, инициализируем все поля
+        Integer petId = faker.number().numberBetween(1,200000000);
+        Category cow = new Category(25, "Cow");
+        Tag tagHouseAnimal = new Tag(7, "houseAnimal");
+        Pet pet = Pet.builder()
+                .id(petId)
+                .category(cow)
+                .name("murka")
+                .photoUrls(List.of("String"))
+                .tags(List.of(tagHouseAnimal))
+                .status("available")
+                .build();
+
+        //Вызываем метод POST(Создаем питомца на сервере), сверяемся, что все поля создались корректно
         String json = gson.toJson(pet);
         given()
                 .contentType(ContentType.JSON)
@@ -49,93 +46,114 @@ public class PetTest {
                 .then()
                 .log().all()
                 .extract().body().jsonPath();
-                assertThat(10001).isEqualTo(pet.getId());
-                assertThat("murka").isEqualTo(pet.getName());
+        assertThat(petId).isEqualTo(pet.getId());
+        assertThat(List.of(25, "Cow")).isEqualTo(List.of(cow.getId(), cow.getName()));
+        assertThat("murka").isEqualTo(pet.getName());
+        assertThat(List.of("String")).isEqualTo(pet.getPhotoUrls());
+        assertThat(pet.getTags()).extracting(Tag::getId, Tag::getName).containsExactly(tuple(7, "houseAnimal"));
+        assertThat("available").isEqualTo(pet.getStatus());
     }
-    @Order(2)
-    @DisplayName("Update Pet")
-    @Description("Post запрос. Обновляем данные по id питомца(только имя и статус)")
+    @DisplayName("Create Pet")
+    @Description("Проверяет отправку запроса на создание питомца по всем полям, проверяем все ручки")
+    @Builder
     @Test
-    public void updatePet(){
-        SpecificationSwag.initialSpec(SpecificationSwag.requestSpecification(URL));
-        given()
-                .contentType(ContentType.URLENC)
-                .pathParam("petId",10000)
-                .formParam("name","molodaya")
-                .formParam("status","available")
-                //.body(json)
-                .when()
-                .post("{petId}")
-                .then()
-                .statusCode(200)
-                .log().all()
-                .extract().body().jsonPath();
-    }
-    @Order(3)
-    @DisplayName("Updating data by id")
-    @Description("Обновляет информацию по id питомца, при чем можно изменить любое поле, PUT запрос")
-    @Test
-    public void putPetById(){
-        SpecificationSwag.initialSpec(SpecificationSwag.requestSpecification(URL));
-        Pet pet = new Pet();
-        pet.setId(10001);
-        pet.setName("borka");
+    public void createPetFull(){
+        SpecificationSwag.initialSpec(SpecificationSwag.requestSpecification(URL,baseUriPet));
+        //Создаем объект питомца, инициализируем все поля
+        Integer petId = faker.number().numberBetween(1,200000000);
+        Integer petCategoryId = faker.number().numberBetween(1,100000);
+        Integer petTegId = faker.number().numberBetween(1,5000000);
+        Category cow = new Category(petCategoryId, "Cow");
+        Tag tagHouseAnimal = new Tag(petTegId,"houseAnimal");
+        Pet pet = Pet.builder()
+                        .id(petId)
+                                .category(cow)
+                                        .name("murka")
+                                                .photoUrls(List.of("String"))
+                                                        .tags(List.of(tagHouseAnimal))
+                                                                .status("available")
+                                                                        .build();
+
+        //Вызываем метод POST(Создаем питомца на сервере), сверяемся, что все поля создались корректно
         String json = gson.toJson(pet);
         given()
                 .contentType(ContentType.JSON)
                 .body(json)
                 .when()
-                .put()
+                .post()
                 .then()
                 .log().all()
                 .extract().body().jsonPath();
-        assertThat(10001).isEqualTo(pet.getId());
-        assertThat("borka").isEqualTo(pet.getName());
-    }
+                assertThat(petId).isEqualTo(pet.getId());
+                assertThat(List.of(petCategoryId,"Cow")).isEqualTo(List.of(cow.getId(),cow.getName()));
+                assertThat("murka").isEqualTo(pet.getName());
+                assertThat(List.of("String")).isEqualTo(pet.getPhotoUrls());
+                assertThat(pet.getTags()).extracting(Tag::getId,Tag::getName).containsExactly(tuple(petTegId,"houseAnimal"));
+                assertThat("available").isEqualTo(pet.getStatus());
 
-    @Order(4)
-    @DisplayName("Get pet by id after put")
-    @Description("Получаем информацию о питомце по id, через метод GET, проверяем, что через метод PUT данные обновились")
-    @Test
-    public void getPet(){
-        SpecificationSwag.initialSpec(SpecificationSwag.requestSpecification(URL));
+        // Через метод POST обновляем имя животного
+               given()
+                        .contentType(ContentType.URLENC)
+                        .pathParam("petId",petId)
+                        .formParam("name","CowFromElwynnForest")
+                        .when()
+                        .post("{petId}")
+                        .then()
+                        .statusCode(200)
+        .extract().as(Pet.class);
 
-        Pet pet = given()
-                .pathParam("petId",10001)
+                        Pet afterForm = given()
+                                .pathParam("petId",petId)
+                                .when()
+                                .get("{petId}")
+                                .then().statusCode(200)
+                        .extract().as(Pet.class);
+                assertThat("CowFromElwynnForest").isEqualTo(afterForm.getName());
+
+        //Через метод PUT меняем имя, ставим статус - Продано
+                Pet pet1 = Pet.builder()
+                        .id(pet.getId())
+                        .name("borka")
+                        .status("sold")
+                        .build();
+        pet1 = given()
+                .contentType(ContentType.JSON)
+                .body(pet1)
+                .when()
+                .put()
+                .then()
+                .log().all()
+                .extract().body().as(Pet.class);
+        assertThat(petId).isEqualTo(pet1.getId());
+        assertThat("borka").isEqualTo(pet1.getName());
+        assertThat("sold").isEqualTo(pet1.getStatus());
+
+        //Get запрос. Получаем информацию после обновления
+        Pet afterUpdate = given()
+                .pathParam("petId",petId)
                 .when()
                 .get("{petId}")
                 .then().log().all()
                 .extract().body().as(Pet.class);
-        //jsonPath().getList("Pet", Pet.class);
-        assertThat(10001).isEqualTo(pet.getId());
-        assertThat("borka").isEqualTo(pet.getName());
+        assertThat(petId).isEqualTo(afterUpdate.getId());
+        assertThat("borka").isEqualTo(afterUpdate.getName());
 
-
-    }
-    @Order(5)
-    @DisplayName("Updating img by pet")
-    @Description("Добавление картинки питомцу по id")
-    @Test
-    public void uploadImagePet(){
+        //POST запрос. Добавление картинки питомцу
         File imgs = Paths.get("src/test/resources/cat.jpg").toFile();
         org.assertj.core.api.Assertions.assertThat(imgs).exists();
         given()
-                .accept(io.restassured.http.ContentType.JSON)
+                .accept("*/*")
+                .contentType("multipart/form-data")
                 .multiPart("additionalMetadata", "picture")
                 .multiPart("file",imgs, "image/jpg")
                 .when()
-                .post("https://petstore.swagger.io/v2/pet/"+10000+"/uploadImage")
+                .post(petId+"/uploadImage")
                 .then()
                 .statusCode(200)
                 .log().all()
                 .extract().body().jsonPath();
-    }
-    @Order(6)
-    @DisplayName("Get pets by status")
-    @Description("Получение списка питомцев по статусу(По умолчанию стоит available, для смены статуса перепишите название эндпоинта)")
-    @Test
-    public void getPetsByStatus(){
-        SpecificationSwag.initialSpec(SpecificationSwag.requestSpecification(URL));
+
+        //Получение списка питомцев по статусу. Стоит available, также доступны: pending, sold
         given()
                 .contentType(ContentType.JSON)
                 .when()
@@ -144,36 +162,22 @@ public class PetTest {
                 .statusCode(200)
                 .log().all()
                 .extract().body().jsonPath();
-    }
-    @Order(7)
-    @DisplayName("Delete pet by id")
-    @Description("Удаление питомца, по его id")
-    @Test
-    public void deletePet(){
-        SpecificationSwag.initialSpec(SpecificationSwag.requestSpecification(URL));
+        //Удаление питомца, по его id
         given()
-                .pathParam("petId","10001")
-                //.header()
+                .pathParam("petId",petId)
                 .contentType(ContentType.JSON)
                 .when()
                 .delete("{petId}")
                 .then()
                 .log().all()
                 .extract().body();
-    }
-    @Order(8)
-    @DisplayName("Get pet by id after delete")
-    @Description("Получаем информацию о питомце по id, проверяем, что животное удалено")
-    @Test
-    public void secondGetPet(){
-        SpecificationSwag.initialSpec(SpecificationSwag.requestSpecification(URL));
-
+        //Получаем информацию о питомце по id, проверяем, что животное удалено
         given()
-                .pathParam("petId",10001)
+                .pathParam("petId",petId)
                 .when()
                 .get("{petId}")
                 .then()
                 .statusCode(404)
                 .log().all();
-}
+    }
 }

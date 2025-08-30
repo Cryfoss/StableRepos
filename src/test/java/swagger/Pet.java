@@ -1,14 +1,17 @@
 package swagger;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
+@Builder
+@lombok.extern.jackson.Jacksonized
+@JsonIgnoreProperties(ignoreUnknown = true)
     public class Pet{
         private Integer id;
         private Category category;

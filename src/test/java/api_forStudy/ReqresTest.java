@@ -2,14 +2,14 @@ package api_forStudy;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
 
 import static io.restassured.RestAssured.given;
 
-class ReqresTest {
-    private final static String URL = "https://reqres.in";
+class ReqresTest extends BaseTest {
 
     @Test
     public void checkAvatarAndIdTest() {
@@ -19,7 +19,7 @@ class ReqresTest {
                 .get("api/users?page=2")
                 .then().log().all()
                 .extract().body().jsonPath().getList("data", UserData.class);
-        users.forEach(a -> Assertions.assertTrue(a.getAvatar().contains(a.getId().toString())));
-        Assertions.assertTrue(users.stream().allMatch(x -> x.getEmail().endsWith("@reqres.in")));
+        assertThat(users).allSatisfy(a -> assertThat(a.getAvatar().contains(a.getId().toString())).isTrue());
+        assertThat(users).allSatisfy(a -> assertThat(a.getEmail().endsWith("@reqres.in")).isTrue());
     }
 }

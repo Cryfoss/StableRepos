@@ -1,12 +1,8 @@
 package api_forStudy;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 class UserData {
     private Integer id;
     private String email;
