@@ -90,7 +90,6 @@ public class PetTest extends BaseSwaggerTest {
                 assertThat(List.of("String")).isEqualTo(pet.getPhotoUrls());
                 assertThat(pet.getTags()).extracting(Tag::getId,Tag::getName).containsExactly(tuple(petTegId,"houseAnimal"));
                 assertThat("available").isEqualTo(pet.getStatus());
-
         // Через метод POST обновляем имя животного
                given()
                         .contentType(ContentType.URLENC)
