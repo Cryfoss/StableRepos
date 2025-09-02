@@ -11,15 +11,13 @@ import java.time.Instant;
 import java.util.Date;
 
 import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.InstanceOfAssertFactories.DATE;
 
-public class StoreTest extends BaseSwaggerTest{
+public class StoreTest extends BasePetStoreTest {
     @Test
-    public void store(){
+    public void store() {
         //Проверям список категорий магазина, сверяемся что есть основные: available, sold, pending
-        SpecificationSwag.initialSpec(SpecificationSwag.requestSpecification(URL,baseUriStore));
+        SpecificationSwag.initialSpec(SpecificationSwag.requestSpecification(URL, baseUriStore));
         JsonPath jsonPath = given()
                 .contentType(ContentType.JSON)
                 .when()
@@ -30,7 +28,7 @@ public class StoreTest extends BaseSwaggerTest{
                 .log().all()
                 .extract().body().jsonPath();
         assertThat(jsonPath.getMap("$"))
-                .containsKeys("available","sold","pending");
+                .containsKeys("available", "sold", "pending");
 
         //Создаем заказ
         Gson gson = new GsonBuilder()
@@ -64,34 +62,33 @@ public class StoreTest extends BaseSwaggerTest{
 
         //Get запрос на получение заказа по id
         given()
-        .contentType(ContentType.JSON)
-        .pathParam("orderId",order.getId())
-        .when()
-        .get("order/"+"{orderId}")
-        .then()
+                .contentType(ContentType.JSON)
+                .when()
+                .get(String.format("order/%s",order.getId()))
+                .then()
                 .statusCode(200)
-        .log().all()
-        .extract().body().jsonPath();
+                .log().all()
+                .extract().body().jsonPath();
         assertThat(id).isEqualTo(order.getId());
 
         //Удаление заказа
         Response deleteOrder = given()
                 .contentType(ContentType.JSON)
-                .pathParam("orderId",order.getId())
+                .pathParam("orderId", order.getId())
                 .when()
-                .delete("order/"+"{orderId}")
+                .delete("order/" + "{orderId}")
                 .then()
+                .statusCode(200)
                 .extract().response();
-        assertThat(deleteOrder.statusCode()).isIn(200,204);
         assertThat(deleteOrder.jsonPath().getString("message"))
                 .isEqualTo(String.valueOf(order.getId()));
 
         //Проверяем что заказа нет
         given()
-                .pathParam("orderId",order.getId())
+                .pathParam("orderId", order.getId())
                 .contentType(ContentType.JSON)
                 .when()
-                .get("order/"+"{orderId}")
+                .get("order/" + "{orderId}")
                 .then()
                 .statusCode(404)
                 .log().all()

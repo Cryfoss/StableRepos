@@ -7,11 +7,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-
 @Data
-@Builder
-@lombok.extern.jackson.Jacksonized
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Builder
     public class Pet{
         private Integer id;
         private Category category;

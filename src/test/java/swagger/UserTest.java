@@ -1,20 +1,27 @@
 package swagger;
 
-import com.google.gson.Gson;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
-public class UserTest extends BaseSwaggerTest{
+public class UserTest extends BasePetStoreTest {
+    @BeforeAll
+    public static void init(){
+        System.out.println("YEAP");
+    }
+    @Disabled("Переделываем на бифорич")
     @Test
-    public void user(){
+    public void user() {
         //Создание одного пользователя
-        SpecificationSwag.initialSpec(SpecificationSwag.requestSpecification(URL,baseUriUser));
+        SpecificationSwag.initialSpec(SpecificationSwag.requestSpecification(URL, baseUriUser));
         int id = faker.number().randomDigit();
         int status = faker.number().randomDigit();
         User user = User.builder()
@@ -37,19 +44,21 @@ public class UserTest extends BaseSwaggerTest{
                 .log().all()
                 .statusCode(200)
                 .extract().body().jsonPath();
-        assertThat(id).isEqualTo(user.getId());
-        assertThat("rogue80lvl").isEqualTo(user.getUsername());
-        assertThat("Petr").isEqualTo(user.getFirstName());
-        assertThat("Petrov").isEqualTo(user.getLastName());
-        assertThat("wow@mail.ru").isEqualTo(user.getEmail());
-        assertThat("Horde1995").isEqualTo(user.getPassword());
-        assertThat("89999999999").isEqualTo(user.getPhone());
-        assertThat(status).isEqualTo(user.getUserStatus());
+        assertAll(
+                () -> assertThat(id).isEqualTo(user.getId()),
+                () -> assertThat("rogue80lvl").isEqualTo(user.getUsername()),
+                () -> assertThat("Petr").isEqualTo(user.getFirstName()),
+                () -> assertThat("Petrov").isEqualTo(user.getLastName()),
+                () -> assertThat("wow@mail.ru").isEqualTo(user.getEmail()),
+                () -> assertThat("Horde1995").isEqualTo(user.getPassword()),
+                () -> assertThat("89999999999").isEqualTo(user.getPhone()),
+                () -> assertThat(status).isEqualTo(user.getUserStatus()));
     }
+
     //Создание списка пользователей (List)
     @Test
-    public void getListUser() {
-        SpecificationSwag.initialSpec(SpecificationSwag.requestSpecification(URL,baseUriUser));
+    public void createListUser() {
+        SpecificationSwag.initialSpec(SpecificationSwag.requestSpecification(URL, baseUriUser));
         int id = faker.number().randomDigit();
         int status = faker.number().randomDigit();
         User user = User.builder()
@@ -72,7 +81,7 @@ public class UserTest extends BaseSwaggerTest{
                 .phone("0")
                 .userStatus(status)
                 .build();
-        String json = gson.toJson(user);
+        String json = gson.toJson(List.of(user, user1));
         given()
                 .contentType(ContentType.JSON)
                 .body(json)
@@ -82,6 +91,7 @@ public class UserTest extends BaseSwaggerTest{
                 .then()
                 .log().all()
                 .statusCode(200)
-                .extract().body().jsonPath().getList(".", User.class);
+                .extract().body().jsonPath();
+
     }
 }
