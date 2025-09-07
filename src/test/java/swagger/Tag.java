@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@lombok.extern.jackson.Jacksonized
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
     public class Tag{
         private Integer id;
