@@ -1,7 +1,5 @@
 package org.example;
 
-import Test.Tools.GsonParser;
-import Test.Tools.Post;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
 

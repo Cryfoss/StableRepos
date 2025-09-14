@@ -10,9 +10,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class PetSteps {
     Pet pet = new Pet();
-    String json = BasePetStoreTest.Jsons.toJson(pet);
 
-    public static void deleteAllPets(Integer id) {
+    public static void deletePet(Integer id) {
         given()
                 .pathParam("petId", id)
                 .delete("/{petId}")
@@ -29,7 +28,7 @@ public class PetSteps {
                 .extract().asString();
     }
 
-    public Pet getPetById(Integer id) {
+    public Pet getPet(Integer id) {
         return given()
                 .pathParam("petId", id)
                 .when()
@@ -46,7 +45,7 @@ public class PetSteps {
                 .then().log().all().statusCode(200).extract().path("message");
     }
 
-    public String getPetByIdWithExtractName(Integer id) {
+    public String getPetName(Integer id) {
         return given()
                 .pathParam("petId", id)
                 .when()
@@ -63,7 +62,6 @@ public class PetSteps {
     }
     public void updateImg(Integer id){
         File imgs = Paths.get("src/test/resources/cat.jpg").toFile();
-        org.assertj.core.api.Assertions.assertThat(imgs).exists();
         given()
                 .accept("*/*")
                 .contentType("multipart/form-data")
@@ -83,5 +81,4 @@ public class PetSteps {
                 .then().log().all()
                 .statusCode(200);
     }
-
 }

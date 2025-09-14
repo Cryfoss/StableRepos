@@ -27,6 +27,8 @@ dependencies {
     testImplementation("io.rest-assured:rest-assured:5.5.5")
     testImplementation("io.rest-assured:json-schema-validator:5.5.5")
 
+    testImplementation ("net.javacrumbs.json-unit:json-unit-assertj:3.2.7")
+
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")

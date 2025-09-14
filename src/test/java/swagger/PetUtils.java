@@ -2,9 +2,6 @@ package swagger;
 
 import java.util.List;
 
-import static io.restassured.RestAssured.given;
-import static swagger.BasePetStoreTest.faker;
-
 public class PetUtils {
 
     public static Pet getSampleCow(int id){

@@ -3,8 +3,6 @@ package swagger;
 import io.qameta.allure.Description;
 import org.junit.jupiter.api.*;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Target;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -38,19 +36,12 @@ public class PetTest extends BasePetStoreTest {
         //Вызываем метод POST(Создаем питомца на сервере), сверяемся, что все поля создались корректно
         String actualJson = petSteps.createPet(json);
         assertThat(actualJson).isEqualTo(json);
-        /*assertAll(
-                () -> assertThat(pet.getId()).isEqualTo(PetUtils.getSampleCow(id).getId()),
-                () -> assertThat(List.of(PetUtils.getSampleCow(id).getCategory().getId(), PetUtils.getSampleCow(id).getCategory().getName())).isEqualTo(List.of(25, "Cow")),
-                () -> assertThat(pet.getName()).isEqualTo("murka"),
-                () -> assertThat(pet.getPhotoUrls()).isEqualTo(List.of("String")),
-                () -> assertThat(pet.getTags()).extracting(Tag::getId, Tag::getName).containsExactly(tuple(7, "houseAnimal")),
-                () -> assertThat(pet.getStatus()).isEqualTo("available"));*/
     }
 
     @AfterEach
     void tempStorage(TestInfo info) {
         if (info.getTags().contains("noAfterEach")) return;
-        PetSteps.deleteAllPets(id);
+        PetSteps.deletePet(id);
         pet = null;
         json = null;
     }
@@ -65,7 +56,7 @@ public class PetTest extends BasePetStoreTest {
         assertThat(actualJson).isEqualTo(json);
 
         // Получаем id, сверяемся что имя тоже что и было в создании
-        Pet resultedPet = petSteps.getPetById(id);
+        Pet resultedPet = petSteps.getPet(id);
         assertThat(resultedPet.getName()).isEqualTo("murka");
 
         //Обновляем имя животного (Как мы можем проверить сразу что имя создалось, если нам нужно что-то помимо статус кода? Нормально ли сверятся так, по id?)
@@ -73,7 +64,7 @@ public class PetTest extends BasePetStoreTest {
         assertThat((id).toString()).isEqualTo(actualMessage);
 
         //Get запрос с получением имени животного
-        String actualName = petSteps.getPetByIdWithExtractName(id);
+        String actualName = petSteps.getPetName(id);
         assertThat(actualName).isEqualTo("CowFromForest");
     }
 
@@ -81,7 +72,6 @@ public class PetTest extends BasePetStoreTest {
     @Description("Создаем животного, меняем статус, тег")
     @Test
     public void putPet() {
-        System.out.println(id);
         // Создаем животного
         String actualJson = petSteps.createPet(json);
         assertThat(actualJson).isEqualTo(json);
@@ -97,7 +87,7 @@ public class PetTest extends BasePetStoreTest {
         petSteps.putPet(newPet);
 
         //Get запрос с проверкой на измененные данные
-        petSteps.getPetById(id);
+        petSteps.getPet(id);
         assertAll(
                 () -> assertThat(newPet.getStatus()).isEqualTo("sold"),
                 () -> assertThat(newPet.getTags()).extracting(Tag::getId, Tag::getName).containsExactly(tuple(10, "Dog")));

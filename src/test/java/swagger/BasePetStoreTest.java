@@ -19,11 +19,4 @@ public class BasePetStoreTest {
 
     protected static String shipDate = LocalDateTime.now()
             .format(DateTimeFormatter.ISO_DATE_TIME);
-
-    public final class Jsons {
-        private static final Gson GSON = new Gson();
-        private Jsons() {}
-        public static String toJson(Object o) { return GSON.toJson(o); }
-    }
-
 }
