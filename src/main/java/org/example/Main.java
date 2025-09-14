@@ -1,23 +1,23 @@
 package org.example;
 
-import lombok.Data;
-import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
+import lombok.EqualsAndHashCode;
+import lombok.Setter;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.Collection;
-import java.util.ArrayList;
+
 
 import static java.lang.Integer.parseInt;
-import static org.example.Main.TicketChecker.isLuckyTicket;
 
+//@EqualsAndHashCode
 public class Main {
-    public static void main(String[] args) throws Exception {
-        isNumberEven(6); // 1. Напиши метод, проверяющий, является ли число чётным.
+
+    public static void main(String[] args) {
+        //System.out.println(isNumberEven(20));
+        /*GsonParser ;parser = new GsonParser();
+        Post post = parser.parse();
+        System.out.println("Root" + post.toString());*/
+        //isNumberEven(6); // 1. Напиши метод, проверяющий, является ли число чётным.
         //isLetterNoMore20Symvols(); // 2. Напиши метод, проверяющий, что введённое имя не больше 20 символов.
         /*int[] res = new int[20];
         for (int i = 0; i < res.length; i++)
@@ -47,50 +47,51 @@ public class Main {
                 .distinct()
                 .sorted()
                 .collect(Collectors.toList());
-        System.out.println(sortedSkillsWithoutDuplicates); */
-
-
-
-
+        System.out.println(sortedSkillsWithoutDuplicates);*/
     }
+
     // 1. Метод позволяющий определить, четное ли число поступило на входе
-    public static Boolean isNumberEven(Integer num){
+    public static Boolean isNumberEven(Integer num) {
         return num % 2 == 0;
     }
+
     // 2. Метод, ограничивающий ввод, свыше 20 символов
-    public static Boolean isStringLessThan20Symbols(String letter){
+    public static Boolean isStringLessThan20Symbols(String letter) {
         Boolean letChecked = letter.length() > 20 ? false : true;
         System.out.println(letChecked);
         return letChecked;
     }
+
     // 3. Метод, принимающий массив и выводящий его, в обратном порядке
-    public static void reverse(int[]array){
+    public static void reverse(int[] array) {
         for (int i = array.length - 1; i >= 0; i--) {
             System.out.println(array[i]);
         }
     }
+
     // 4. Метод, проверяющий, начинается ли слово с большой буквы (с русской раскладкой почему-то не робит)
-    public static Boolean isFirstSymvolsCapital(String letter){
+    public static Boolean isFirstSymvolsCapital(String letter) {
         Boolean asd = Character.isUpperCase(letter.charAt(0));
         System.out.println(asd);
         return asd;
     }
+
     //5. Метод, который принимает email и проверяет, есть ли в нём @ и точка после него
-    public static Boolean isMailCorrect(String adress){
+    public static Boolean isMailCorrect(String adress) {
         int at = adress.indexOf("@") + 1;
         int dot = adress.indexOf(".") + 1;
-        Boolean check = ((dot > at) && (at != 0))? true : false;
+        Boolean check = ((dot > at) && (at != 0)) ? true : false;
         System.out.println(check);
         return check;
     }
+
     //Практика Java 1.Lucky Ticket
-    public class TicketChecker{
+    public class TicketChecker {
         public static Boolean isLuckyTicket(String ticket) throws Exception {
             int length = ticket.length();
             try {
                 Integer.parseInt(ticket);
-            }
-            catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
 
                 throw new Exception("Введите число!");
             }
@@ -109,8 +110,9 @@ public class Main {
         }
 
     }
+
     //Практика Java 2.Проверка анаграмм
-    public static Boolean areAnagrams(String word1,String word2){
+    public static Boolean areAnagrams(String word1, String word2) {
         //Удаляем пробелы
         String firstWordWithoutSpaces = word1.replace(" ", "");
         String secondWordWithoutSpaces = word2.replace(" ", "");
@@ -118,13 +120,13 @@ public class Main {
         String wordCorrectCase1 = firstWordWithoutSpaces.toLowerCase();
         String wordCorrectCase2 = secondWordWithoutSpaces.toLowerCase();
         // Создаем массив символов с наших строк и сортируем их для дальнейшего сравнения
-        char [] charArrayWord1 = wordCorrectCase1.toCharArray();
+        char[] charArrayWord1 = wordCorrectCase1.toCharArray();
         Arrays.sort(charArrayWord1);
-        char [] charArrayWord2 = wordCorrectCase2.toCharArray();
+        char[] charArrayWord2 = wordCorrectCase2.toCharArray();
         Arrays.sort(charArrayWord2);
-        return Arrays.equals(charArrayWord1,charArrayWord2);
+        return Arrays.equals(charArrayWord1, charArrayWord2);
     }
-    }
+}
 
 
 
